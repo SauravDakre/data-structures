@@ -49,6 +49,57 @@ class BinarySearchTree {
             this.recursiveInorderTraversal(head.right)
         }
     }
+
+    delete(data){
+        this.deleteNodeRecursively(this.head, data)
+    }
+
+    deleteNodeRecursively(head, data){
+        console.log('---del--', head)
+        if(head === null){
+            return head
+        }else if(head.data > data){
+            head.right = this.deleteNodeRecursively(head.right, data)
+            return head
+        }else if(head.data < data) {
+            head.left = this.deleteNodeRecursively(head.left, data)
+            return head
+        }else{
+            console.log('----found---', head)
+            if(head.left === null && head.right === null){ // leaf node
+                head = null
+                return head
+            }
+            if(head.left === null) { // deleting node having only right node
+                head = head.right
+                return head
+            }
+            if(head.right === null) { // deleting node having only left node
+                head = head.left
+                return head
+            }
+            // deleting node having both children
+            const minNode = this.findMinNode(head.right)
+            head.data = minNode.data
+            head.right = this.deleteNodeRecursively(head.right, minNode.data)
+            return head
+        }
+    }
+
+    minValue(){
+        const min = this.findMinNode(this.head)
+        console.log(min)
+        return min.data
+    }
+    findMinNode(head){
+        // console.log(head.data)
+        if(!head) return head
+        if(head.left == null){
+            return head
+        }else{
+            return this.findMinNode(head.left)
+        }
+    }
 }
 
 const b = new BinarySearchTree()
@@ -60,5 +111,8 @@ b.insert(9)
 b.insert(7)
 b.insert(11)
 console.log(JSON.stringify(b))
+b.inorderTraversal()
+// console.log('---min-----', b.minValue())
+b.deleteNodeRecursively(7)
 b.inorderTraversal()
 
